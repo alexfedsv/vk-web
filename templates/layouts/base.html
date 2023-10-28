@@ -1,0 +1,100 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en" class="h-100" data-bs-theme="auto">
+  <head>
+    <title>Let us try it!</title>
+    <link href="{% static '/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static '/css/main.css' %}" rel="stylesheet">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.123rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="d-flex flex-column h-100">
+
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'index' %}">Start Page</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        <img src="../static/img/pic1.png" alt="" class="avatar">
+            <div class="navbar-text">Dr. Pepper<br/>settings logout</div><br/>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="flex-shrink-0">
+  <div class="container">
+    <div class="row">
+      <div class="col-8">
+          {% block content %}
+          {% endblock %}
+      </div>
+      <div class="col-4">
+        <div class="row right-bar">
+          <h2 class="mt-5">Popular tags</h2>
+          <div class="tags">
+            <span class="badge bg-primary">perl</span>
+            <span class="badge bg-secondary">python</span>
+            <span class="badge bg-success">TechonPark</span>
+            <span class="badge bg-danger">MySQL</span>
+            <span class="badge bg-dark">django</span>
+            <span class="badge bg-success">Mail.ru</span>
+            <span class="badge bg-danger">Voloshin</span>
+            <span class="badge bg-dark">Firefox</span>
+          </div>
+          <br/>
+          <h2 class="mt-5">Best memebers</h2>
+          <div class="tags">
+            <span class="badge bg-primary">Mr.Freeman</span>
+            <span class="badge bg-secondary">Dr.House</span>
+            <span class="badge bg-success">Bender</span>
+            <span class="badge bg-danger">King Charles</span>
+            <span class="badge bg-dark">V.Pupkin</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer mt-auto py-3 bg-body-tertiary">
+  <div class="container">
+    <span class="text-body-secondary">Сделано для Технопарка.</span>
+  </div>
+</footer>
+<script src="{% static '/js/bootstrap.js' %}"></script>
+    </body>
+</html>

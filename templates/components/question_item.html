@@ -1,0 +1,14 @@
+{% load static %}
+
+<div class="row question">
+  <div class="col-3">
+    <img src="{% static '/img/pic1.png' %}" alt="" class="question-image">
+    <h3>counter</h3>
+  </div>
+  <div class="col-9">
+    <div class="question-title">
+      <a href="{% url 'question' question_id=question.id %}">{{ question.title }}</a>
+    </div>
+    <div class="question-text">{{question.content}}</div>
+  </div>
+</div>
