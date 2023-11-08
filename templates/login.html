@@ -1,0 +1,25 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<h1 class="mt-5">Log In</h1>
+<section class="login mt-5">
+    <div class="col-12">
+        Sorry, wrong password!
+    </div>
+    <div class="row">
+        <form class="col-12">
+            <div class="mb-3">
+                <label>Login</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label>Password</label>
+                <input type="text" class="form-control">
+            </div>
+            <br/>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+</section>
+<a class="col-12" href="{% url 'registration' %}">Create new account</a>
+{% endblock %}

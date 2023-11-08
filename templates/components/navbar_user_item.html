@@ -1,0 +1,15 @@
+{% load static %}
+
+
+{% if user.is_active %}
+    <img src="{% static '/img/pic1.png' %}" alt="" class="rounded-circle avatar">
+    <div class="navbar-text">{{user.name}}<br/>
+        <a href="{% url 'settings' %}">settings</a>
+        <a href="#">logout</a>
+    </div><br/>
+{% else %}
+    <div class="navbar-text">
+        <a href="{% url 'login' %}">login</a>
+        <a href="{% url 'registration' %}">register</a>
+    </div><br/>
+{% endif %}

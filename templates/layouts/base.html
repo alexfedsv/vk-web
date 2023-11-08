@@ -28,28 +28,25 @@
   <!-- Fixed navbar -->
   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'index' %}">Start Page</a>
+      <a class="navbar-brand" href="{% url 'index' %}">Questions</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
+      <div class="collapse navbar-collapse justify-content-start" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'ask' %}">New Question</a>
           </li>
         </ul>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapseCenter">
         <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <input class="form-control me-3 custom-search-input" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
-        <img src="../static/img/pic1.png" alt="" class="avatar">
-            <div class="navbar-text">Dr. Pepper<br/>settings logout</div><br/>
+        </div>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarCollapseEnd">
+            {% include 'components/navbar_user_item.html' %}
+        </div>
       </div>
     </div>
   </nav>
@@ -64,26 +61,9 @@
       </div>
       <div class="col-4">
         <div class="row right-bar">
-          <h2 class="mt-5">Popular tags</h2>
-          <div class="tags">
-            <span class="badge bg-primary">perl</span>
-            <span class="badge bg-secondary">python</span>
-            <span class="badge bg-success">TechonPark</span>
-            <span class="badge bg-danger">MySQL</span>
-            <span class="badge bg-dark">django</span>
-            <span class="badge bg-success">Mail.ru</span>
-            <span class="badge bg-danger">Voloshin</span>
-            <span class="badge bg-dark">Firefox</span>
-          </div>
+          {% include 'components/block_popular_tags.html' %}
           <br/>
-          <h2 class="mt-5">Best memebers</h2>
-          <div class="tags">
-            <span class="badge bg-primary">Mr.Freeman</span>
-            <span class="badge bg-secondary">Dr.House</span>
-            <span class="badge bg-success">Bender</span>
-            <span class="badge bg-danger">King Charles</span>
-            <span class="badge bg-dark">V.Pupkin</span>
-          </div>
+          {% include 'components/block_best_members.html' %}
         </div>
       </div>
     </div>

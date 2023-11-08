@@ -3,12 +3,24 @@
 <div class="row question">
   <div class="col-3">
     <img src="{% static '/img/pic1.png' %}" alt="" class="question-image">
-    <h3>counter</h3>
+    <div class="likes-counter-container justify-content-center">
+      <button class="likes-counter-button">👍</button>
+      <span class="likes-counter">0</span>
+      <button class="likes-counter-button">👎</button>
+    </div>
   </div>
   <div class="col-9">
     <div class="question-title">
-      <a href="{% url 'question' question_id=question.id %}">{{ question.title }}</a>
+      <a href="{% url 'question' question_id=question.id page_num=1 %}">{{ question.title }}</a>
     </div>
-    <div class="question-text">{{question.content}}</div>
+    <div class="question-text">{{ question.content }}</div>
+    <br/>
+    <div>
+      <a href="#">answer({{ question.answers_count }})</a>
+      Tags:
+      {% for tag in question.tags %}
+        <a class="tag" href="{% url 'tag' target_tag=tag page_num=1 %}">#{{ tag }}</a>
+      {% endfor %}
+    </div>
   </div>
 </div>

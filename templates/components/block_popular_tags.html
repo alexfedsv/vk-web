@@ -1,0 +1,14 @@
+{% load static %}
+
+<h2 class="mt-5">Popular tags</h2>
+<div class="popular_tags">
+    <span class="badge bg-primary custom-badge"><a class="no-link-style" href="{% url 'tag' target_tag='Perl' page_num=1 %}">Perl</a></span>
+    <span class="badge bg-secondary custom-badge"><a class="no-link-style" href="{% url 'tag' target_tag='Python' page_num=1 %}">Python</a></span>
+    <span class="badge bg-success custom-badge"><a class="no-link-style" href="{% url 'tag' target_tag='TechnoPark' page_num=1 %}">TechnoPark</a></span>
+    <span class="badge bg-danger custom-badge"><a class="no-link-style" href="{% url 'tag' target_tag='MySQL' page_num=1 %}">MySQL</a></span>
+    <span class="badge bg-dark custom-badge"><a class="no-link-style" href="{% url 'tag' target_tag='django' page_num=1 %}">django</a></span>
+    <span class="badge bg-info custom-badge"><a class="no-link-style" href="{% url 'tag' target_tag='Mail.ru' page_num=1 %}">Mail.ru</a></span>
+    <span class="badge bg-danger custom-badge"><a class="no-link-style" href="{% url 'tag' target_tag='Voloshin' page_num=1 %}">Voloshin</a></span>
+    <span class="badge bg-dark custom-badge"><a class="no-link-style" href="{% url 'tag' target_tag='Firefox' page_num=1 %}">Firefox</a></span>
+    <span class="badge bg-primary custom-badge"><a class="no-link-style" href="{% url 'tag' target_tag='Swift' page_num=1 %}">Swift</a></span>
+</div>
