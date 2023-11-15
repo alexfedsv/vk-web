@@ -9,7 +9,7 @@
 <section class="answers mt-5">
     <h2>Answers</h2>
 
-    {% for answer in answers %}
+    {% for answer_info in answers_with_info %}
 
         {% include 'components/answer_item.html' %}
 
@@ -19,10 +19,10 @@
     <ul class="pagination">
         {% for i in pages %}
         {% if page == i|add:-1 and i != 1 %}
-            <li class="page-item"><a class="page-link" href="{% url 'question' question_id=question.id page_num=page|add:1 %}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="{% url 'question' question_id=question_info.question.id page_num=page|add:1 %}">Next</a></li>
         {% endif %}
         {% if page == i|add:1 and i != pages %}
-            <li class="page-item"><a class="page-link" href="{% url 'question' question_id=question.id page_num=page|add:-1 %}">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="{% url 'question' question_id=question_info.question.id page_num=page|add:-1 %}">Previous</a></li>
         {% endif %}
         {% if page == i %}
             <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>

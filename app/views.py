@@ -1,60 +1,156 @@
 from django.shortcuts import render
-from django.core.paginator import Paginator, EmptyPage
-
-
-title_1 = 'Lorem ipsum dolor sit amet'
-title_2 = 'Nullam ac dapibus lectus'
-title_3 = 'Vestibulum a ultrices tellus'
-content_1 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce odio nisl, dapibus non diam quis, semper hendrerit justo. Integer convallis mauris lectus, sit amet imperdiet velit mollis a. Aliquam erat volutpat. Sed non massa egestas, molestie sem condimentum, volutpat purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum eu magna purus. Vivamus et augue turpis. Donec mattis ipsum sed congue viverra. Ut enim eros, tempus in commodo ac, tincidunt vitae orci. Fusce faucibus facilisis est, id venenatis libero porta aliquam. Sed et eros orci. In semper odio lacus, vitae tristique libero lobortis non. Suspendisse potenti.'
-content_2 = 'Nullam ac dapibus lectus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In tincidunt neque egestas magna fermentum volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris fermentum odio et accumsan rhoncus. Cras et iaculis orci. Integer nec massa placerat, volutpat purus non, pulvinar elit. Sed gravida massa malesuada ultrices tristique.'
-content_3 = 'Vestibulum a ultrices tellus, vitae condimentum ipsum. Vivamus commodo nibh eget tincidunt faucibus. Proin porta commodo nisl, rutrum vulputate libero consequat et. Aliquam vitae gravida justo, sed posuere eros. Donec ac aliquam elit. Etiam maximus et lorem eget mollis. Sed non urna libero. Sed tincidunt viverra lorem et dictum. Sed et sapien urna. Aliquam consectetur lectus ut augue tincidunt scelerisque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus lorem quam, elementum et neque in, tincidunt porttitor nibh. Nam scelerisque tempus orci, nec semper ipsum consequat sagittis.'
-titles = [title_1 + ' 0', title_2 + ' 1', title_3 + ' 2', title_1 + ' 3', title_2 + ' 4', title_3 + ' 5', title_1 + ' 6', title_2 + ' 7', title_3 + ' 8', title_1 + ' 9', title_2 + ' 10', title_3 + ' 11']
-contents = [content_1, content_2, content_3, content_1, content_2, content_3, content_1, content_2, content_3, content_1, content_2, content_3]
-tag_1 = 'Perl'
-tag_2 = 'Python'
-tag_3 = 'TechnoPark'
-tag_4 = 'MySQL'
-tag_5 = 'django'
-tag_6 = 'Mail.ru'
-tag_7 = 'Voloshin'
-tag_8 = 'Firefox'
-tag_9 = 'C++'
-tag_10 = 'Swift'
-tags = [tag_1, tag_2, tag_3, tag_4, tag_5, tag_6, tag_7, tag_8, tag_9, tag_10]
-question_tags = [
-    [tag_1, tag_2, tag_3],
-    [tag_4, tag_5],
-    [tag_1, tag_3, tag_4, tag_7, tag_9],
-    [tag_7, tag_8, tag_9],
-    [tag_2, tag_3, tag_4],
-    [tag_1, tag_10, tag_6],
-    [tag_3, tag_4, tag_5],
-    [tag_1, tag_5, tag_6],
-    [tag_6, tag_7, tag_9],
-    [tag_6, tag_7, tag_8],
-    [tag_1, tag_9],
-    [tag_2, tag_3, tag_6, tag_7, tag_8]]
-
-QUESTIONS = [
-    {
-        'id': i,
-        'title': titles[i],
-        'content': contents[i],
-        'tags':  question_tags[i]
-    } for i in range(10)
-]
-ANSWERS = []
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from app.models import Profile, Question, Answer, Tag, QuestionLike, AnswerLike
+from django.contrib.auth.models import User
+from sqlite3 import IntegrityError
+from django.db import transaction
+from faker import Faker
 import random
-for question in QUESTIONS:
-    for i in range(1, random.randrange(2, 11)):
-        answer = {
-            'question_id': question['id'],
-            'id': i,
-            'title': 'Answer at ' + titles[i],
-            'content': 'This is answer to that question. The question_id is ' + str(question['id']) + '. ' + contents[i],
+
+import warnings
+warnings.filterwarnings('ignore', message="DateTimeField Answer.dt received a naive datetime", category=RuntimeWarning)
+# warnings.filterwarnings('default')
+
+fake = Faker()
+
+
+'''def fill_profile_entity():
+    profiles = []
+    for i in range(0, 100):
+        user_name = fake.user_name()
+        profile = {
+            'login': user_name + str(i),
+            'password': 'psw_' + str(i),
+            'nickname': user_name + str(i),
+            'email': user_name + str(i) + '@example.com'
         }
-        ANSWERS.append(answer)
+        profiles.append(profile)
+
+    for profile_data in profiles:
+        p = Profile(
+            userId=uuid.uuid4(),
+            login=profile_data["login"],
+            password=profile_data["password"],
+            nickname=profile_data["nickname"],
+            email=profile_data["email"]
+        )
+        p.save()'''
+
+
+def fill_profile_entity(n):
+    for i in range(0, n):
+        try:
+            u = User.objects.create_user(
+                username=fake.user_name() + str(i),
+                email=fake.email(),
+                password='psw',
+                first_name=fake.first_name(),
+                last_name=fake.last_name())
+            u.save()
+            p = Profile.objects.create(user=u)
+            p.save()
+            print(f'user created {i}')
+        except IntegrityError:
+            fill_profile_entity(n - i + 1)
+
+
+def fill_question_entity(n):
+    profiles = Profile.objects.all()
+    for i in range(n):
+        user_profile = random.choice(profiles)
+        q = Question(user=user_profile,
+                     title=fake.sentence(),
+                     content=fake.paragraph(),
+                     dt=fake.date_time_this_year())
+        q.save()
+        print(f'question created {i}')
+
+
+def create_fake_tags(n=11000):
+    with open('tags.txt', 'w') as file:
+        for i in range(n):
+            tag_name = fake.word()
+            file.write(tag_name + '\n')
+            print(f'{i} tag created')
+
+
+def fill_tag_entity(n):
+    with open('tags.txt', 'r') as file:
+        tags_ = file.readlines()
+    for i in range(n):
+        random_question = Question.objects.order_by('?').first()
+        random_tag = random.choice(tags_).strip()
+        t = Tag(question=random_question,
+                tag=random_tag)
+        t.save()
+        if i % 1000 == 0:
+            print(f'tag created {i}')
+
+
+def fill_question_like_entity(n):
+    users = Profile.objects.all()
+    questions = Question.objects.all()
+    for i in range(n):
+        u = random.choice(users)
+        q = random.choice(questions)
+        like = random.choice([-1, 0, 1])
+        QuestionLike.objects.create(user=u, question=q, like=like)
+        print(f'like at question created {i}')
+
+
+def fill_answer_like_entity(n):
+    users = Profile.objects.all()
+    answer_ = Answer.objects.all()
+    for i in range(n):
+        u = random.choice(users)
+        aa = random.choice(answer_)
+        like = random.choice([-1, 0, 1])
+        AnswerLike.objects.create(user=u, answer=aa, like=like)
+        print(f'like at answer created {i}')
+
+
+def fill_answer_entity(n):
+    users = Profile.objects.all()
+    for i in range(n):
+        random_question = Question.objects.order_by('?').first()
+        random_user = random.choice(
+            users.exclude(id=random_question.user.id))
+        a = Answer(question=random_question,
+                   user=random_user,
+                   content=fake.paragraph(),
+                   dt=fake.date_time_this_year(),
+                   is_correct=random.choice([True, False]))
+        a.save()
+        if i % 1000 == 0:
+            print(f'answer created {i}')
+
+
+def fill_answer_entity_bulk(n):
+    users = Profile.objects.all()
+    answers = []
+    with transaction.atomic():
+        for i in range(n):
+            random_question = Question.objects.order_by('?').first()
+            random_user = random.choice(users.exclude(id=random_question.user.id))
+            answer_ = Answer(question=random_question,
+                             user=random_user,
+                             content=fake.paragraph(),
+                             dt=fake.date_time_this_year(),
+                             is_correct=random.choice([True, False]))
+            answers.append(answer_)
+            print(f'answer created {i}')
+        Answer.objects.bulk_create(answers)
+        print(f'Готово {n} добавлено')
+
+
+'''fill_profile_entity(12000)'''
+'''fill_question_entity(110000)'''
+'''fill_answer_entity(1100000-962891)'''
+'''fill_answer_entity_bulk(5000)'''
+'''create_fake_tags()'''
+'''fill_tag_entity(100000)'''
+'''fill_question_like_entity(1000000)'''
+'''fill_answer_like_entity(1000000)'''
 
 
 user = {
@@ -68,83 +164,141 @@ user = {
 }
 
 
-def paginate(objects, page, per_page=4):
-    paginator = Paginator(objects, per_page=per_page)
-    return paginator.page(page).object_list, paginator.num_pages
+def paginate(objects_list, request, page_num, per_page=5):
+    page = request.GET.get('page', page_num)
+    paginator = Paginator(objects_list, per_page=per_page)
+    try:
+        pagination_obj = paginator.page(page).object_list
+        pagination_pages_count = paginator.num_pages
+    except EmptyPage:
+        return error(request)
+    except PageNotAnInteger:
+        return error(request)
+    return pagination_obj, pagination_pages_count
 
 
 def index(request, page_num=1):
-    page = request.GET.get('page', page_num)
-    try:
-        pagination = paginate(QUESTIONS, page)
-    except EmptyPage:
-        return error(request)
+    questions_db = Question.manager.get_questions()
+    pagination = paginate(questions_db, request, page_num)
     questions = pagination[0]
-    for question_ in questions:
-        answers_ = [ans for ans in ANSWERS if question_['id'] is ans['question_id']]
-        question_['answers_count'] = len(answers_)
+    questions_with_info = []
+    for q in questions:
+        question_info = {
+            'question': q,
+            'answers_count': Answer.manager.get_answers_at_question_count(q),
+            'likes_count': QuestionLike.manager.get_likes_at_question_count(q),
+            'tags': Tag.manager.get_tags_at_question(q)
+        }
+        questions_with_info.append(question_info)
     pages = list(range(1, pagination[1] + 1))
+    popular_tags = Tag.manager.get_top_tags()
     return render(request, template_name='index.html', context={
         'user': user,
         'pages': pages,
         'page': page_num,
-        'popular_tags': tags,
-        'questions': questions})
+        'popular_tags': popular_tags,
+        'questions_with_info': questions_with_info})
 
 
-def question(request, question_id, page_num=1):
-    page = request.GET.get('page', page_num)
-    question_ = QUESTIONS[question_id]
-    answers_ = [answer for answer in ANSWERS if question_id is answer['question_id']]
-    answer_per_page = 2
-    try:
-        pagination = paginate(answers_, page, answer_per_page)
-    except EmptyPage:
-        return error(request)
-    answers = pagination[0]
-    pages = list(range(1, pagination[1] + 1))
-    return render(request, template_name='question.html', context={
-        'user': user,
-        'pages': pages,
-        'page': page,
-        'popular_tags': tags,
-        'question': question_,
-        'answers': answers})
-
-
-def ask(request):
-    return render(request, template_name='ask.html', context={'user': user, 'popular_tags': tags})
-
-
-def login(request):
-    return render(request, template_name='login.html', context={'user': user, 'popular_tags': tags})
-
-
-def registration(request):
-    return render(request, template_name='registration.html', context={'user': user, 'popular_tags': tags})
-
-
-def tag(request, target_tag, page_num=1):
-    page = request.GET.get('page', page_num)
-    filtered_questions = [question for question in QUESTIONS if target_tag in question['tags']]
-    question_per_page = 2
-    try:
-        pagination = paginate(filtered_questions, page, question_per_page)
-    except EmptyPage:
-        return error(request)
+def hot(request, page_num=1):
+    questions_db = Question.manager.get_questions()
+    pagination = paginate(questions_db, request, page_num)
     questions = pagination[0]
+    questions_with_info = []
+    for q in questions:
+        question_info = {
+            'question': q,
+            'answers_count': Answer.manager.get_answers_at_question_count(q),
+            'likes_count': QuestionLike.manager.get_likes_at_question_count(q),
+            'tags': Tag.manager.get_tags_at_question(q)
+        }
+        questions_with_info.append(question_info)
     pages = list(range(1, pagination[1] + 1))
-    return render(request, template_name='tag.html', context={
+    popular_tags = Tag.manager.get_top_tags()
+    return render(request, template_name='hot.html', context={
         'user': user,
         'pages': pages,
         'page': page_num,
-        'popular_tags': tags,
-        'questions': questions,
-        'target_tag': target_tag})
+        'popular_tags': popular_tags,
+        'questions_with_info': questions_with_info})
+
+
+def question(request, question_id, page_num=1):
+    try:
+        question_ = Question.objects.get(id=question_id)
+    except Question.DoesNotExist:
+        return error(request)
+    answers_with_info = []
+    answers_db = Answer.manager.get_answers_at_question(question_)
+    answer_per_page = 2
+    pagination = paginate(answers_db, request, page_num, answer_per_page)
+    answers = pagination[0]
+    pages = list(range(1, pagination[1] + 1))
+    question_info = {
+        'question': question_,
+        'answers_count': Answer.manager.get_answers_at_question_count(question_),
+        'likes_count': QuestionLike.manager.get_likes_at_question_count(question_),
+        'tags': Tag.manager.get_tags_at_question(question_)
+    }
+    for aa in answers:
+        answer_info = {
+            'answer': aa,
+            'likes_count': AnswerLike.manager.get_likes_at_answer_count(aa)
+        }
+        answers_with_info.append(answer_info)
+    popular_tags = Tag.manager.get_top_tags()
+    return render(request, template_name='question.html', context={
+        'user': user,
+        'pages': pages,
+        'page': page_num,
+        'popular_tags': popular_tags,
+        'question_info': question_info,
+        'answers_with_info': answers_with_info})
+
+
+def ask(request):
+    popular_tags = Tag.manager.get_top_tags()
+    return render(request, template_name='ask.html', context={'user': user, 'popular_tags': popular_tags})
+
+
+def login(request):
+    popular_tags = Tag.manager.get_top_tags()
+    return render(request, template_name='login.html', context={'user': user, 'popular_tags': popular_tags})
+
+
+def registration(request):
+    popular_tags = Tag.manager.get_top_tags()
+    return render(request, template_name='registration.html', context={'user': user, 'popular_tags': popular_tags})
+
+
+def tag(request, target_tag, page_num=1):
+    questions_db = Question.manager.get_questions_by_tag(target_tag)
+    questions_per_page = 2
+    pagination = paginate(questions_db, request, page_num, questions_per_page)
+    questions = pagination[0]
+    questions_with_info = []
+    for q in questions:
+        question_info = {
+            'question': q,
+            'answers_count': Answer.manager.get_answers_at_question_count(q),
+            'likes_count': QuestionLike.manager.get_likes_at_question_count(q),
+            'tags': Tag.manager.get_tags_at_question(q)
+        }
+        questions_with_info.append(question_info)
+    pages = list(range(1, pagination[1] + 1))
+    popular_tags = Tag.manager.get_top_tags()
+    return render(request, template_name='tag.html', context={
+        'target_tag': target_tag,
+        'user': user,
+        'pages': pages,
+        'page': page_num,
+        'popular_tags': popular_tags,
+        'questions_with_info': questions_with_info})
 
 
 def settings(request):
-    return render(request, template_name='settings.html', context={'user': user, 'popular_tags': tags})
+    popular_tags = Tag.manager.get_top_tags()
+    return render(request, template_name='settings.html', context={'user': user, 'popular_tags': popular_tags})
 
 
 def error(request):

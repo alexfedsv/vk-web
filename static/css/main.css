@@ -44,7 +44,7 @@ main > .container {
     max-height: 160px;
 }
 .question-title {
-    font-size: 30px;
+    font-size: 26px;
     font-family: Helvetica;
     font-wight: bold;
 }
@@ -108,4 +108,7 @@ main > .container {
 }
 .settings-label {
     width: 150px;
+}
+.answers_and_tags {
+
 }

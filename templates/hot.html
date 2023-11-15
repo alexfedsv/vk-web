@@ -4,11 +4,11 @@
 
 {% block content %}
 
-<h1 class="mt-5">Tag: {{ target_tag }}</h1>
+<h1 class="mt-5">Hot Questions</h1>
 
 {% for question_info in questions_with_info %}
 
-{% include 'components/question_item.html' %}
+    {% include 'components/question_item.html' %}
 
 {% endfor %}
 
@@ -16,16 +16,23 @@
     <ul class="pagination">
         {% for i in pages %}
         {% if page == i|add:-1 and i != 1 %}
-            <li class="page-item"><a class="page-link" href="{% url 'tag' target_tag=target_tag page_num=page|add:1 %}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="{% url 'hot' page_num=page|add:1 %}">Next</a></li>
         {% endif %}
         {% if page == i|add:1 and i != pages %}
-            <li class="page-item"><a class="page-link" href="{% url 'tag' target_tag=target_tag page_num=page|add:-1 %}">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="{% url 'hot' page_num=page|add:-1 %}">Previous</a></li>
         {% endif %}
         {% if page == i %}
             <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>
         {% endif %}
         {% endfor %}
     </ul>
+
 </nav>
+
+{% endblock %}
+
+{% block pagination %}
+
+    {% include 'components/paginator.html' %}
 
 {% endblock %}

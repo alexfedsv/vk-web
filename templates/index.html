@@ -6,7 +6,7 @@
 
 <h1 class="mt-5">Questions</h1>
 
-{% for question in questions %}
+{% for question_info in questions_with_info %}
 
     {% include 'components/question_item.html' %}
 
@@ -26,6 +26,13 @@
         {% endif %}
         {% endfor %}
     </ul>
+
 </nav>
+
+{% endblock %}
+
+{% block pagination %}
+
+    {% include 'components/paginator.html' %}
 
 {% endblock %}

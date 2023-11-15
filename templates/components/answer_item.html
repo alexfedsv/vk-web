@@ -5,17 +5,16 @@
         <img src="{% static '/img/pic1.png' %}" alt="" class="answer-image">
         <div class="likes-counter-container justify-content-center">
           <button class="likes-counter-button">👍</button>
-          <span class="likes-counter">0</span>
+          <span class="likes-counter">{{ answer_info.likes_count }}</span>
           <button class="likes-counter-button">👎</button>
         </div>
       </div>
     <div class="col-9 border p-3">
-        <div><h3>{{answer.title}}</h3></div>
-        <div>{{answer.content}}</div>
+        <div>{{answer_info.answer.content}}</div>
         <br/>
         <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="customCheck" name="correct">
-            <label class="custom-control-label" for="customCheck">Correct!</label>
+            <input type="checkbox" class="custom-control-input" id="answer_info.answer_{{ answer.id }}" name="correct" {% if answer_info.answer.is_correct %} checked {% endif %}>
+            <label class="custom-control-label" for="answer_{{ answer_info.answer.id }}">Correct!</label>
         </div>
     </div>
 </div>
