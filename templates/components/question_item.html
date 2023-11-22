@@ -9,21 +9,18 @@
       <button class="likes-counter-button">👎</button>
     </div>
   </div>
-  <div class="col-9">
+  <div class="col-9 position-relative">
     <div class="question-title">
       <a href="{% url 'question' question_id=question_info.question.id page_num=1 %}">{{ question_info.question.title }}</a>
     </div>
     <br/>
     <div class="question-text">{{ question_info.question.content }}</div>
-    <br/>
-    <br/>
-    <br/>
-      <div class="answers_and_tags">
-        answers ({{ question_info.answers_count }})
-        Tags:
-        {% for tag in question_info.tags %}
-          <a class="tag" href="{% url 'tag' target_tag=tag page_num=1 %}">#{{ tag }}</a>
-        {% endfor %}
-      </div>
+    <div class="answers_and_tags position-absolute bottom-0">
+      answers ({{ question_info.answers_count }})
+      Tags:
+      {% for tag in question_info.tags %}
+        <a class="tag" href="{% url 'tag' target_tag=tag page_num=1 %}">#{{ tag }}</a>
+      {% endfor %}
+    </div>
   </div>
 </div>

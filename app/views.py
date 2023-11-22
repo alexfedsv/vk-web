@@ -7,12 +7,6 @@ from django.db import transaction
 from faker import Faker
 import random
 
-import warnings
-warnings.filterwarnings('ignore', message="DateTimeField Answer.dt received a naive datetime", category=RuntimeWarning)
-# warnings.filterwarnings('default')
-
-fake = Faker()
-
 
 
 user = {
@@ -63,7 +57,7 @@ def index(request, page_num=1):
 
 
 def hot(request, page_num=1):
-    questions_db = Question.manager.get_questions()
+    questions_db = Question.manager.get_questions_hot()
     pagination = paginate(questions_db, request, page_num)
     questions = pagination[0]
     questions_with_info = []

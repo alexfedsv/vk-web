@@ -13,8 +13,12 @@
         <div>{{answer_info.answer.content}}</div>
         <br/>
         <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="answer_info.answer_{{ answer.id }}" name="correct" {% if answer_info.answer.is_correct %} checked {% endif %}>
-            <label class="custom-control-label" for="answer_{{ answer_info.answer.id }}">Correct!</label>
+            <input type="checkbox" class="custom-control-input" id="answer_checkbox_{{ answer_info.answer.id }}"
+                   name="correct"
+                   {% if answer_info.answer.is_correct %}
+                   checked
+                   {% endif %}>
+            <label class="custom-control-label" for="answer_checkbox_{{ answer_info.answer.id }}">Correct!</label>
         </div>
     </div>
 </div>

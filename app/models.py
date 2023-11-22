@@ -19,8 +19,23 @@ class QuestionManager(models.Manager):
     def get_questions(self, count=100):
         return self.order_by('-dt')[:count]
 
-    '''def get_questions_hot(self, count=100):
-        return self.get_questions().annotate(likes_count=Count('questionlike__like')).order_by('-likes_count')[:count]'''
+    def get_questions_hot(self, count=100):
+        question_info = []
+        questions = self.order_by('-dt')[:count]
+        for question in questions:
+            likes = QuestionLike.manager.get_likes_at_question_count(question)
+            question_info.append(
+                {
+                    "question": question,
+                    "likes": likes
+                }
+            )
+        sorted_question_info = sorted(question_info, key=lambda x: x["likes"], reverse=True)
+        sorted_questions = []
+        for info in sorted_question_info:
+            sorted_questions.append(info["question"])
+        return sorted_questions
+
 
     def get_tags_at_question(self, question):
         tags = Tag.manager.get_tags_at_question(question)
