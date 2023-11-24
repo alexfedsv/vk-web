@@ -42,7 +42,7 @@ class QuestionManager(models.Manager):
         return tags
 
     def get_questions_by_tag(self, tag):
-        return Question.objects.filter(tag__tag=tag).order_by('-dt')
+        return Question.objects.filter(tag__tag=tag).order_by('-dt')[:50]
 
 
 class Question(models.Model):

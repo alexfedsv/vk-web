@@ -129,7 +129,7 @@ def registration(request):
 
 def tag(request, target_tag, page_num=1):
     questions_db = Question.manager.get_questions_by_tag(target_tag)
-    questions_per_page = 2
+    questions_per_page = 3
     pagination = paginate(questions_db, request, page_num, questions_per_page)
     questions = pagination[0]
     questions_with_info = []

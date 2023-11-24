@@ -12,27 +12,7 @@
 
 {% endfor %}
 
-<nav class="mt-3 d-flex justify-content-center">
-    <ul class="pagination">
-        {% for i in pages %}
-        {% if page == i|add:-1 and i != 1 %}
-            <li class="page-item"><a class="page-link" href="{% url 'hot' page_num=page|add:1 %}">Next</a></li>
-        {% endif %}
-        {% if page == i|add:1 and i != pages %}
-            <li class="page-item"><a class="page-link" href="{% url 'hot' page_num=page|add:-1 %}">Previous</a></li>
-        {% endif %}
-        {% if page == i %}
-            <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>
-        {% endif %}
-        {% endfor %}
-    </ul>
+{% include 'components/paginator_bar.html' with page=page pages=pages %}
 
-</nav>
-
-{% endblock %}
-
-{% block pagination %}
-
-    {% include 'components/paginator.html' %}
 
 {% endblock %}

@@ -16,20 +16,16 @@
     {% endfor %}
 
     <nav class="mt-3 d-flex justify-content-center">
-    <ul class="pagination">
-        {% for i in pages %}
-        {% if page == i|add:-1 and i != 1 %}
-            <li class="page-item"><a class="page-link" href="{% url 'question' question_id=question_info.question.id page_num=page|add:1 %}">Next</a></li>
-        {% endif %}
-        {% if page == i|add:1 and i != pages %}
-            <li class="page-item"><a class="page-link" href="{% url 'question' question_id=question_info.question.id page_num=page|add:-1 %}">Previous</a></li>
-        {% endif %}
-        {% if page == i %}
-            <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>
-        {% endif %}
-        {% endfor %}
-    </ul>
-</nav>
+        <ul class="pagination">
+            {% for current_page in pages %}
+                {% if page == current_page %}
+                    <li class="page-item"><a class="page-link page-item-chosen" href="{% url request.resolver_match.view_name question_id=question_info.question.id page_num=current_page %}">{{ current_page }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="{% url request.resolver_match.view_name question_id=question_info.question.id page_num=current_page %}"> {{current_page}} </a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
 
     <div class="row question">
         <form class="col-12 border p-3">
