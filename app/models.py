@@ -7,14 +7,6 @@ from django.db.models import Count
 from django.db.models import Sum
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    objects = models.Manager()
-
-    def __str__(self):
-        return f"{self.user.username}"
-
-
 class QuestionManager(models.Manager):
     def get_questions(self, count=100):
         return self.order_by('-dt')[:count]
@@ -46,7 +38,7 @@ class QuestionManager(models.Manager):
 
 
 class Question(models.Model):
-    user = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=256)
     content = models.TextField(default='')
     dt = models.DateTimeField(default=timezone.now)
@@ -54,7 +46,7 @@ class Question(models.Model):
     manager = QuestionManager()
 
     def __str__(self):
-        return f"{self.user.user.username} : {self.title}"
+        return f"{self.user.username} : {self.title}"
 
 
 class AnswerManager(models.Manager):
@@ -68,7 +60,7 @@ class AnswerManager(models.Manager):
 
 class Answer(models.Model):
     question = models.ForeignKey('Question', on_delete=models.CASCADE)
-    user = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(default='')
     dt = models.DateTimeField(default=timezone.now)
     is_correct = models.BooleanField(default=False)
@@ -76,7 +68,7 @@ class Answer(models.Model):
     manager = AnswerManager()
 
     def __str__(self):
-        return f"{self.user.user.username} -> {self.question.user.user.username} : {self.question.title}"
+        return f"{self.user.username} -> {self.question.user.username} : {self.question.title}"
 
 
 class AnswerLikeManager(models.Manager):
@@ -86,7 +78,7 @@ class AnswerLikeManager(models.Manager):
 
 
 class AnswerLike(models.Model):
-    user = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     answer = models.ForeignKey('Answer', on_delete=models.CASCADE)
     like = models.IntegerField(default=0)
     objects = models.Manager()
@@ -103,7 +95,7 @@ class QuestionLikeManager(models.Manager):
 
 
 class QuestionLike(models.Model):
-    user = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey('Question', on_delete=models.CASCADE)
     like = models.IntegerField(default=0)
     objects = models.Manager()
@@ -134,7 +126,7 @@ class Tag(models.Model):
 
 
 class Avatar(models.Model):
-    user = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.BinaryField(null=True, blank=True)
 
 

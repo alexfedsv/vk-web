@@ -1,15 +1,44 @@
 {% load static %}
 
 
-{% if user.is_active %}
-    <img src="{% static '/img/pic1.png' %}" alt="" class="rounded-circle avatar">
-    <div class="navbar-text">{{user.name}}<br/>
-        <a href="{% url 'settings' %}">settings</a>
-        <a href="#">logout</a>
-    </div><br/>
-{% else %}
-    <div class="navbar-text">
-        <a href="{% url 'login' %}">login</a>
-        <a href="{% url 'registration' %}">register</a>
-    </div><br/>
-{% endif %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'index' %}">Questions</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-start" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'hot' page_num=1 %}">Hot Questions</a>
+          </li>
+          {% if user is not None %}
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'ask' %}">New Question</a>
+            </li>
+            {% endif %}
+
+        </ul>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarCollapseCenter">
+        <form class="d-flex" role="search">
+          <input class="form-control me-3 custom-search-input" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        </div>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarCollapseEnd">
+            {% if user is not None %}
+                <img src="{% static '/img/pic1.png' %}" alt="" class="rounded-circle avatar">
+                <div class="navbar-text">@{{user.username}}<br/>
+                    <a href="{% url 'settings' %}">settings</a>
+                    <a href="{% url 'logout' %}">logout</a>
+                </div><br/>
+            {% else %}
+                <div class="navbar-text">
+                    <a href="{% url 'login' %}">login</a>
+                    <a href="{% url 'registration' %}">register</a>
+                </div><br/>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>

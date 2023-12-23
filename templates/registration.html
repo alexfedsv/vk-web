@@ -1,38 +1,22 @@
 {% extends 'layouts/base.html' %}
-
+{% load static %}
+{% load django_bootstrap5 %}
 {% block content %}
 <h1 class="mt-5">Registration</h1>
 <section class="registration mt-5">
-    <div class="col-12 warning">
-        Sorry, this email is already registered!
-    </div>
     <div class="row">
-        <form class="col-12">
+        <form class="col-12" method="post" action="/registration/">
+            {% csrf_token %}
             <div class="mb-3">
-                <label>Login</label>
-                <input type="text" class="form-control">
+                {% bootstrap_form form %}
             </div>
             <div class="mb-3">
-                <label>Email</label>
-                <input type="text" class="form-control">
+              <label class="form-label w-100">
+                    Upload avatar
+                    <img src="{% static '/img/empty_av.png' %}" alt="" class="avatar-settings">
+              </label>
             </div>
-            <div class="mb-3">
-                <label>NickName</label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label>Repeat password</label>
-                <input type="password" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label>Password</label>
-                <input type="password" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label>Upload avatar</label>
-                <input type="file" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <br/><button type="submit" class="btn btn-primary">Register</button>
         </form>
     </div>
 </section>

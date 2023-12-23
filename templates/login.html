@@ -1,23 +1,13 @@
 {% extends 'layouts/base.html' %}
-
+{% load django_bootstrap5 %}
 {% block content %}
 <h1 class="mt-5">Log In</h1>
 <section class="login mt-5">
-    <div class="col-12  warning">
-        Sorry, wrong password!
-    </div>
     <div class="row">
-        <form class="col-12">
-            <div class="mb-3">
-                <label>Login</label>
-                <input type="text" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label>Password</label>
-                <input type="password" class="form-control">
-            </div>
-            <br/>
-            <button type="submit" class="btn btn-primary">Login</button>
+        <form class="col-12" method="post" action="/login/">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <br/><button type="submit" class="btn btn-primary">Login</button>
         </form>
     </div>
 </section>
