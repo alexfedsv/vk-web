@@ -81,6 +81,7 @@ def hot(request, page_num=1):
         'questions_with_info': questions_with_info})
 
 
+@csrf_protect
 def question(request, question_id, page_num=1):
     try:
         question_ = Question.objects.get(id=question_id)
@@ -110,13 +111,16 @@ def question(request, question_id, page_num=1):
     else:
         user = None
     if request.method == 'GET':
+        print('это GET')
         answer_form = AnswerForm()
     if request.method == 'POST':
+        print('это POST')
         answer_form = AnswerForm(request.POST)
         if answer_form.is_valid():
             # здесь будем сохранять
             return redirect(reverse('index'))
-
+    print("errors:")
+    print(answer_form.errors)
     context = {
         'user': user,
         'pages': pages,

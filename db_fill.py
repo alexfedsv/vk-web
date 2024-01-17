@@ -1,4 +1,4 @@
-from app.models import Profile, Question, Answer, Tag, QuestionLike, AnswerLike
+from app.models import Question, Answer, Tag, QuestionLike, AnswerLike
 from django.contrib.auth.models import User
 from sqlite3 import IntegrityError
 from django.db import transaction
@@ -46,16 +46,32 @@ def fill_profile_entity(n):
                 password='psw',
                 first_name=fake.first_name(),
                 last_name=fake.last_name())
+            print(f'user created {u.username}')
+        except IntegrityError:
+            print(f'User with username {u.username} already exists')
+        except Exception as e:
+            print(f'An error occurred while creating user: {e}')
+
+
+'''def fill_profile_entity(n):
+    for i in range(0, n):
+        try:
+            u = User.objects.create_user(
+                username=fake.user_name() + str(i),
+                email=fake.email(),
+                password='psw',
+                first_name=fake.first_name(),
+                last_name=fake.last_name())
             u.save()
-            p = Profile.objects.create(user=u)
+            p = User.objects.create_user(u)
             p.save()
             print(f'user created {i}')
         except IntegrityError:
-            fill_profile_entity(n - i + 1)
+            fill_profile_entity(n - i + 1)'''
 
 
 def fill_question_entity(n):
-    profiles = Profile.objects.all()
+    profiles = User.objects.all()
     for i in range(n):
         user_profile = random.choice(profiles)
         q = Question(user=user_profile,
@@ -88,7 +104,7 @@ def fill_tag_entity(n):
 
 
 def fill_question_like_entity(n):
-    users = Profile.objects.all()
+    users = User.objects.all()
     questions = Question.objects.all()
     for i in range(n):
         u = random.choice(users)
@@ -99,7 +115,7 @@ def fill_question_like_entity(n):
 
 
 def fill_answer_like_entity(n):
-    users = Profile.objects.all()
+    users = User.objects.all()
     answer_ = Answer.objects.all()
     for i in range(n):
         u = random.choice(users)
@@ -110,7 +126,7 @@ def fill_answer_like_entity(n):
 
 
 def fill_answer_entity(n):
-    users = Profile.objects.all()
+    users = User.objects.all()
     for i in range(n):
         random_question = Question.objects.order_by('?').first()
         random_user = random.choice(
@@ -126,7 +142,7 @@ def fill_answer_entity(n):
 
 
 def fill_answer_entity_bulk(n):
-    users = Profile.objects.all()
+    users = User.objects.all()
     answers = []
     with transaction.atomic():
         for i in range(n):
@@ -151,3 +167,12 @@ def fill_answer_entity_bulk(n):
 '''fill_tag_entity(100000)'''
 '''fill_question_like_entity(1000000)'''
 '''fill_answer_like_entity(1000000)'''
+
+fill_profile_entity(120)
+fill_question_entity(1100)
+fill_answer_entity(10000)
+fill_answer_entity_bulk(10)
+create_fake_tags()
+fill_tag_entity(1000)
+fill_question_like_entity(10000)
+fill_answer_like_entity(10000)

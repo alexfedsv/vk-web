@@ -39,6 +39,17 @@
         </form>
     </div>
     {% endif %}
+     {% if user is not None %}
+
+    <div class="row question">
+        <form class="col-12 border p-3" method="post" action="#">
+            <h2>New Answer</h2>
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <br/><button type="submit" class="btn btn-primary">Answer</button>
+        </form>
+    </div>
+    {% endif %}
 
 </section>
 

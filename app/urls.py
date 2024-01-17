@@ -1,7 +1,7 @@
 from django.urls import path
 from app import views
 
-
+# import db_fill
 urlpatterns = [
     path('', views.index, name='index'),
     path('<int:page_num>/', views.index, name='index'),
