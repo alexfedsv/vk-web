@@ -51,7 +51,7 @@ class AskForm(forms.ModelForm):
 
 
 class AnswerForm(forms.ModelForm):
-    content = forms.CharField(widget=forms.TextInput())
+    content = forms.TextInput()
 
     class Meta:
         model = Answer

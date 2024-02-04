@@ -111,16 +111,12 @@ def question(request, question_id, page_num=1):
     else:
         user = None
     if request.method == 'GET':
-        print('это GET')
         answer_form = AnswerForm()
     if request.method == 'POST':
-        print('это POST')
         answer_form = AnswerForm(request.POST)
         if answer_form.is_valid():
-            # здесь будем сохранять
+            answer_form.save_answer(user=user, question=question_)
             return redirect(reverse('index'))
-    print("errors:")
-    print(answer_form.errors)
     context = {
         'user': user,
         'pages': pages,
@@ -129,7 +125,6 @@ def question(request, question_id, page_num=1):
         'question_info': question_info,
         'answers_with_info': answers_with_info,
         'answer_form': answer_form}
-    print(context)
     return render(request, template_name='question.html', context=context)
 
 

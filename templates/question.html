@@ -32,20 +32,7 @@
         <form class="col-12 border p-3" method="post" action="#">
             <h2>New Answer</h2>
             {% csrf_token %}
-            <label class="form-label w-100">
-                <textarea rows="10" class="form-control"></textarea>
-            </label>
-            <br/><button type="submit" class="btn btn-primary">Answer</button>
-        </form>
-    </div>
-    {% endif %}
-     {% if user is not None %}
-
-    <div class="row question">
-        <form class="col-12 border p-3" method="post" action="#">
-            <h2>New Answer</h2>
-            {% csrf_token %}
-            {% bootstrap_form form %}
+            {% bootstrap_form answer_form %}
             <br/><button type="submit" class="btn btn-primary">Answer</button>
         </form>
     </div>
